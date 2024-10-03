@@ -49,7 +49,7 @@ const Login = () => {
 
   }, [form]);
 
-  console.log(form);
+  
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
@@ -94,7 +94,7 @@ const Login = () => {
           />
           <label htmlFor="terms">I agree to all terms and conditions</label>
         </div>
-        <button type="submit" disabled={!isValid}>
+        <button type="submit" disabled={!isValid} cy-test="login">
           Login
         </button>
       </form>
