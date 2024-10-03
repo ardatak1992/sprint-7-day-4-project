@@ -1,0 +1,9 @@
+.success-container {
+  background-color: rgba(100, 108, 255, 0.367);
+  width: 600px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
