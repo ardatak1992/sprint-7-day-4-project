@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import "./Login.css";
 
 const initialForm = {
@@ -9,8 +10,15 @@ const initialForm = {
 };
 
 const Login = () => {
+
+  const history = useHistory();
+
   const [form, setForm] = useState(initialForm);
   const [isValid, setIsValid] = useState(false);
+  const [errors, setErrors] = useState({
+    email: true,
+    password: true,
+  });
 
   function handleChange(e) {
     if (e.target.type === "checkbox") {
@@ -20,14 +28,31 @@ const Login = () => {
     }
   }
 
-  useEffect(() => {
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (isValid) {
+      history.push("/success");
+    }
+  }
 
-  }, [form])
-  
+  useEffect(() => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    const isEmailValid = emailRegex.test(form.email);
+    const isPasswordValid = form.password.length >= 8;
+
+    setErrors({
+      email: !isEmailValid,
+      password: !isPasswordValid,
+    });
+
+    setIsValid(isEmailValid && isPasswordValid && form.terms)
+
+  }, [form]);
+
   console.log(form);
   return (
     <div className="form-container">
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="">Email:</label>
           <input
@@ -36,7 +61,11 @@ const Login = () => {
             id="email"
             value={form.email}
             onChange={handleChange}
+            style={{ border: errors.email ? "1px solid red" : "none" }}
           />
+          {errors.email && (
+            <p className="error-message">Please enter a valid email</p>
+          )}
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
@@ -46,7 +75,13 @@ const Login = () => {
             id="password"
             value={form.password}
             onChange={handleChange}
+            style={{ border: errors.password ? "1px solid red" : "none" }}
           />
+          {errors.password && (
+            <p className="error-message">
+              Password should be atleast 8 character long
+            </p>
+          )}
         </div>
 
         <div className="form-group terms">
@@ -59,7 +94,9 @@ const Login = () => {
           />
           <label htmlFor="terms">I agree to all terms and conditions</label>
         </div>
-        <button type="submit" disabled={!isValid}>Login</button>
+        <button type="submit" disabled={!isValid}>
+          Login
+        </button>
       </form>
     </div>
   );
